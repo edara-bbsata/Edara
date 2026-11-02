@@ -90,33 +90,6 @@
             margin-top: 4px;
         }
 
-        /* ساعة التايمر */
-        .timer-clock {
-            background: #fff1f2;
-            border: 2px solid #fda4af;
-            color: #e11d48;
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-weight: 900;
-            font-size: 20px;
-            display: none;
-            align-items: center;
-            gap: 12px;
-            box-shadow: 0 4px 15px rgba(225, 29, 72, 0.08);
-        }
-
-        .timer-clock.warning {
-            background: #fee2e2;
-            border-color: #ef4444;
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.03); }
-            100% { transform: scale(1); }
-        }
-
         .exam-banner {
             text-align: center;
             margin-bottom: 20px;
@@ -136,7 +109,7 @@
             display: none;
         }
 
-        /* شاشة البداية الترحيبية مع لوجو كبير وإمضائك */
+        /* شاشة البداية الترحيبية مع اللوجو الكبير وإمضائك مباشرة */
         .welcome-screen {
             background: white;
             border-radius: var(--radius);
@@ -438,7 +411,7 @@
 <body>
 
     <div class="container">
-        <!-- الهيدر المحسن -->
+        <!-- الهيدر -->
         <header>
             <div class="logo-area">
                 <img src="logo - لوجو.png" alt="لوجو الإدارة ببساطة" class="logo-img">
@@ -447,11 +420,6 @@
                     <p>د. عمـــرو الشوبكي</p>
                 </div>
             </div>
-            <!-- ساعة التايمر -->
-            <div class="timer-clock" id="timerBox">
-                <i class="fa-regular fa-clock"></i>
-                <span id="timerText">20:00</span>
-            </div>
         </header>
 
         <div class="exam-banner">
@@ -459,12 +427,12 @@
             <div class="progress-indicator" id="progressIndicator">السؤال 1 من 40</div>
         </div>
 
-        <!-- شاشة البداية مع اللوجو الكبير وإمضائك -->
+        <!-- شاشة البداية بدون جملة إشراف وتقديم -->
         <div class="welcome-screen" id="welcomeScreen">
             <img src="logo - لوجو.png" alt="لوجو الإدارة ببساطة" class="welcome-logo-large">
-            <div class="welcome-signature">إشراف وتقديم: د. عمـــرو الشوبكي</div>
+            <div class="welcome-signature">د. عمـــرو الشوبكي</div>
             <h3>مرحباً بك في اختبار ذهبية الميد تيرم</h3>
-            <p>هذا الاختبار مصمم خصيصاً لتقييم مستواك المعرفي والإداري. مدة الاختبار المقررة هي <b>20 دقيقة</b> تبدأ فور ضغطك على زر البدء.<br>يمكنك إعادة الاختبار عدة مرات متى شئت لضمان تحقيق الاستفادة القصوى.</p>
+            <p>هذا الاختبار مصمم خصيصاً لتقييم مستواك المعرفي والإداري بدون قيود زمنية لتاخذ كامل حريتك في التفكير والتأمل.<br>يمكنك إعادة الاختبار عدة مرات متى شئت لضمان تحقيق الاستفادة القصوى.</p>
             <button type="button" class="btn-start" onclick="startExam()">
                 <i class="fa-solid fa-play"></i> ابدأ الامتحان الآن
             </button>
@@ -484,8 +452,6 @@
     </div>
 
     <script>
-        let timeLeft = 20 * 60;
-        let timerInterval;
         let isSubmitted = false;
         let currentCardIndex = 0;
 
@@ -557,51 +523,17 @@
 
         const quizContainer = document.getElementById('quizContainer');
         const progressIndicator = document.getElementById('progressIndicator');
-        const timerBox = document.getElementById('timerBox');
-        const timerText = document.getElementById('timerText');
         const welcomeScreen = document.getElementById('welcomeScreen');
         const resultBox = document.getElementById('resultBox');
 
         function startExam() {
             welcomeScreen.style.display = 'none';
-            timerBox.style.display = 'flex';
             progressIndicator.style.display = 'block';
             
-            timeLeft = 20 * 60;
             isSubmitted = false;
             currentCardIndex = 0;
             
             renderQuiz();
-            startTimer();
-        }
-
-        function startTimer() {
-            clearInterval(timerInterval);
-            timerBox.classList.remove('warning');
-
-            timerInterval = setInterval(() => {
-                if (isSubmitted) {
-                    clearInterval(timerInterval);
-                    return;
-                }
-
-                let minutes = Math.floor(timeLeft / 60);
-                let seconds = timeLeft % 60;
-
-                timerText.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-                if (timeLeft <= 60) {
-                    timerBox.classList.add('warning');
-                }
-
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    alert("انتهى الوقت المحدد للاختبار! سيتم تصحيح الإجابات وعرض النتيجة فوراً.");
-                    submitQuiz();
-                } else {
-                    timeLeft--;
-                }
-            }, 1000);
         }
 
         function renderQuiz() {
@@ -695,7 +627,6 @@
         function submitQuiz() {
             if (isSubmitted) return;
             isSubmitted = true;
-            clearInterval(timerInterval);
 
             let score = 0;
             let tfTotal = tfData.length;
@@ -731,14 +662,13 @@
                 }
             });
 
-            timerBox.style.display = 'none';
             progressIndicator.style.display = 'none';
             
             const resultText = document.getElementById('resultText');
             resultBox.style.display = 'block';
             resultText.innerHTML = `لقد حصلت على <b>${score}</b> من <b>${tfTotal}</b> في أسئلة الصح والخطأ.<br>تم تصحيح الإجابات بالكامل، ويمكنك مراجعتها بالأعلى أو إعادة الاختبار متى شئت.`;
 
-            window.scrollTo({ top: top, behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function restartExam() {
