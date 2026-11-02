@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ذهبية الميد تيرم - الإدارة ببساطة</title>
+    <!-- استدعاء خط Cairo العصري -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0d9488;
+            --primary-light: #14b8a6;
+            --accent: #f59e0b;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+            --border-color: #e5e7eb;
+            --radius: 20px;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        /* الهيدر المحسن */
+        header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-img {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            border-radius: 16px;
+            background: #f8fafc;
+            padding: 5px;
+            border: 1px solid var(--border-color);
+        }
+
+        .logo-title h1 {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+
+        .logo-title p {
+            font-size: 16px;
+            color: var(--primary);
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        /* ساعة التايمر */
+        .timer-clock {
+            background: #fff1f2;
+            border: 2px solid #fda4af;
+            color: #e11d48;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 900;
+            font-size: 20px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(225, 29, 72, 0.08);
+        }
+
+        .timer-clock.warning {
+            background: #fee2e2;
+            border-color: #ef4444;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        .exam-banner {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .exam-banner h2 {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--text-main);
+        }
+
+        .progress-indicator {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* شاشة البداية الترحيبية مع لوجو كبير وإمضائك */
+        .welcome-screen {
+            background: white;
+            border-radius: var(--radius);
+            padding: 50px 30px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+        }
+
+        .welcome-logo-large {
+            width: 140px;
+            height: 140px;
+            object-fit: contain;
+            margin-bottom: 25px;
+            border-radius: 24px;
+            background: #f8fafc;
+            padding: 10px;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+        }
+
+        .welcome-signature {
+            font-size: 18px;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .welcome-screen h3 {
+            font-size: 28px;
+            color: var(--text-main);
+            margin-bottom: 15px;
+            font-weight: 900;
+        }
+
+        .welcome-screen p {
+            font-size: 17px;
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-start {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px 50px;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(13, 148, 136, 0.35);
+            transition: all 0.2s;
+        }
+
+        .btn-start:hover {
+            background: #0f766e;
+            transform: translateY(-2px);
+        }
+
+        /* كارت السؤال الفردي */
+        .question-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .question-card.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .q-header {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            display: flex;
+            gap: 15px;
+            line-height: 1.7;
+            color: var(--text-main);
+        }
+
+        .q-number {
+            background: var(--primary);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(13, 148, 136, 0.3);
+        }
+
+        .tf-options {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .tf-option {
+            flex: 1;
+            padding: 18px;
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 18px;
+            transition: all 0.2s;
+            background: #fafafa;
+        }
+
+        .tf-option input {
+            display: none;
+        }
+
+        .tf-option:hover {
+            background: #f0fdfa;
+            border-color: var(--primary-light);
+        }
+
+        .tf-option.selected-true {
+            border-color: var(--primary);
+            background: rgba(13, 148, 136, 0.08);
+            color: var(--primary);
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.1);
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            gap: 15px;
+        }
+
+        .btn-nav {
+            background: white;
+            color: var(--text-main);
+            border: 2px solid var(--border-color);
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-nav:hover:not(:disabled) {
+            background: #f1f5f9;
+            border-color: var(--text-muted);
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-next, .btn-submit-exam {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(13, 148, 136, 0.3);
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn-next:hover, .btn-submit-exam:hover {
+            background: #0f766e;
+            transform: translateY(-1px);
+        }
+
+        .essay-textarea {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            font-family: 'Cairo', sans-serif;
+            font-size: 16px;
+            resize: vertical;
+            outline: none;
+            background: #fafafa;
+        }
+
+        .essay-textarea:focus {
+            border-color: var(--primary);
+            background: white;
+        }
+
+        .btn-show-model {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .essay-answer-box {
+            background: #f0fdfa;
+            border: 1px solid #ccfbf1;
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 12px;
+            font-size: 15px;
+            color: var(--text-main);
+            display: none;
+            line-height: 1.7;
+        }
+
+        .essay-answer-box strong {
+            color: var(--primary);
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        /* صندوق النتيجة النهائية */
+        .result-box {
+            background: white;
+            border: 3px solid var(--primary);
+            border-radius: var(--radius);
+            padding: 40px;
+            text-align: center;
+            display: none;
+            box-shadow: 0 15px 35px rgba(13, 148, 136, 0.15);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-box h2 {
+            font-size: 32px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .result-box p {
+            font-size: 20px;
+            color: var(--text-main);
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .btn-restart {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+            transition: all 0.2s;
+        }
+
+        .btn-restart:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+            .logo-area {
+                flex-direction: column;
+            }
+            .tf-options {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- الهيدر المحسن -->
+        <header>
+            <div class="logo-area">
+                <img src="logo - لوجو.png" alt="لوجو الإدارة ببساطة" class="logo-img">
+                <div class="logo-title">
+                    <h1>الإدارة ببساطة</h1>
+                    <p>د. عمـــرو الشوبكي</p>
+                </div>
+            </div>
+            <!-- ساعة التايمر -->
+            <div class="timer-clock" id="timerBox">
+                <i class="fa-regular fa-clock"></i>
+                <span id="timerText">20:00</span>
+            </div>
+        </header>
+
+        <div class="exam-banner">
+            <h2>ذهبية الميد تيرم</h2>
+            <div class="progress-indicator" id="progressIndicator">السؤال 1 من 40</div>
+        </div>
+
+        <!-- شاشة البداية مع اللوجو الكبير وإمضائك -->
+        <div class="welcome-screen" id="welcomeScreen">
+            <img src="logo - لوجو.png" alt="لوجو الإدارة ببساطة" class="welcome-logo-large">
+            <div class="welcome-signature">إشراف وتقديم: د. عمـــرو الشوبكي</div>
+            <h3>مرحباً بك في اختبار ذهبية الميد تيرم</h3>
+            <p>هذا الاختبار مصمم خصيصاً لتقييم مستواك المعرفي والإداري. مدة الاختبار المقررة هي <b>20 دقيقة</b> تبدأ فور ضغطك على زر البدء.<br>يمكنك إعادة الاختبار عدة مرات متى شئت لضمان تحقيق الاستفادة القصوى.</p>
+            <button type="button" class="btn-start" onclick="startExam()">
+                <i class="fa-solid fa-play"></i> ابدأ الامتحان الآن
+            </button>
+        </div>
+
+        <!-- صندوق النتيجة النهائية -->
+        <div class="result-box" id="resultBox">
+            <h2><i class="fa-solid fa-award"></i> مبروك إتمام الاختبار!</h2>
+            <p id="resultText"></p>
+            <button type="button" class="btn-restart" onclick="restartExam()">
+                <i class="fa-solid fa-rotate-right"></i> إعادة الاختبار من جديد
+            </button>
+        </div>
+
+        <!-- حاوية الكروت -->
+        <div id="quizContainer"></div>
+    </div>
+
+    <script>
+        let timeLeft = 20 * 60;
+        let timerInterval;
+        let isSubmitted = false;
+        let currentCardIndex = 0;
+
+        const tfData = [
+            { id: 1, q: "يخطئ من يتصور أن نـجاح المشروع يتوقف على عقول المديرين وجهود الموظفين.", ans: "false" },
+            { id: 2, q: "من الثابت علمياً وعملياً أن الموارد البشرية ليست أهم مورد من موارد المنظمة – كما يظن الكثيرون – فالموارد المالية والمادية هي الأهم والأغلى والأثمن من الموارد البشرية.", ans: "false" },
+            { id: 3, q: "تتعلق الكفاية بالكم والكفاءة بالكيف والفاعلية تجمع بينهما.", ans: "true" },
+            { id: 4, q: "كفاية وكفاءة وفاعلية الأداء الوظيفي مرادفات لمعنى واحد.", ans: "false" },
+            { id: 5, q: "وظائف المدير هي: الإنتاج والتسويق والموارد البشرية والشراء والتخزين والتمويل.", ans: "false" },
+            { id: 6, q: "المدير يُصنع، أما القائد فيُخلق.", ans: "true" },
+            { id: 7, q: "الإدارة علم وفن وممارسة، والممارسة تعني التطبيق المستمر.", ans: "true" },
+            { id: 8, q: "تطويع المفاهيم العلمية والنظرية على الواقع العملي أمر في غاية الأهمية.", ans: "true" },
+            { id: 9, q: "إدارة الأزمات والإدارة بالأزمات وجهان لعملة واحدة.", ans: "false" },
+            { id: 10, q: "من الحقائق الثابتة أن مدرسة العلاقات الإنسانية نظرت إلى العمل من جانبيه الإنساني والعملي معاً.", ans: "false" },
+            { id: 11, q: "القاعدة الذهبية أن التوازن بين الجانب الإنساني والجانب العملي أحد الأسرار التي تحقق النـجاح للمنظمة.", ans: "true" },
+            { id: 12, q: "من يعرف هدفه يستطيع أن يبلغ نصف الطريق.", ans: "true" },
+            { id: 13, q: "الإدارة بالفطرة، والقيادة بالصنع.", ans: "false" },
+            { id: 14, q: "الخطوة الأولى تقييم الأداء والخطوة الثانية تقويم الأداء.", ans: "true" },
+            { id: 15, q: "يأتي التقويم بعد التقييم.", ans: "true" },
+            { id: 16, q: "التقييم لأداء العاملين يعد بمثابة بداية لرحلة جديدة.. تسمى تقويم أداء العاملين.", ans: "true" },
+            { id: 17, q: "تقويم الأداء يعتبر هدف، أما تقييم الأداء فهو مجرد وسيلة.", ans: "true" },
+            { id: 18, q: "إن عملية تقويم الأداء وسيلة وليس هدف.", ans: "false" },
+            { id: 19, q: "الأداء تقييم وليس تقويم.", ans: "false" },
+            { id: 20, q: "المدير الذي لا يعرف كيف يتخذ قراراً عليه أن يعتزل، وإذا لم يعتزل فسوف يُقال.", ans: "true" },
+            { id: 21, q: "الإدارة العليا تكرس 90% من وقتها للعمل الفني، و10% فقط للعمل الإداري.", ans: "false" },
+            { id: 22, q: "الأداء هو محصلة الرغبة والقدرة.", ans: "true" },
+            { id: 23, q: "إذا أردنا أن نبحث عن الأداء فعليك أن تبحث عنه من خلال محورين وهما الرغبة × القدرة.", ans: "true" },
+            { id: 24, q: "السياسات هي الدليل الإرشادي لاتخاذ القرار، وأي سياسة لها إجراءات تنفيذية.", ans: "true" },
+            { id: 25, q: "الطاقات هي الوجه الثاني من الموارد، والترجمة المناظرة للطاقات هي السياسات.", ans: "true" },
+            { id: 26, q: "التخطيط يقلل من المخاطر ولكن لا يمنعها تماماً.", ans: "true" },
+            { id: 27, q: "التخطيط والرقابة متكاملان؛ لأن أي خطة توضع لا بد أن تُراقب لتحقيق الهدف.", ans: "true" },
+            { id: 28, q: "الأداء التنظيمي في المنظمة يقاس بناتج المعادلة التالية: الكفاءة × الفعالية.", ans: "true" },
+            { id: 29, q: "كفاية الأداء تعني الحد الأدنى من متطلبات الأداء أو هي إنـجاز المهام بما يكفي لتحقيق الهدف الأساسي.", ans: "true" },
+            { id: 30, q: "فاعلية الأداء هي كم وكيف يعتمد عليه، وهي توازن بين الكفاية والكفاءة.", ans: "true" },
+            { id: 31, q: "السياسة العامة هي السياسة التي تضعها الإدارة العليا في المنشأة أو مجلس الوزراء في الدولة.", ans: "true" },
+            { id: 32, q: "الهدف هو النتيجة التي يصبو اليها رجل الإدارة .", ans: "true" },
+            { id: 33, q: "التنبؤ هو تلمس أحوال المستقبل بناء على تفكير منطقي يقود الى توقعات حكيمة.", ans: "true" },
+            { id: 34, q: "السياسة هي مجموعة من المبادىء والمفاهيم التي تضعها المستويات العليا في التنظيم لكي يسترشد بها المديرون", ans: "true" },
+            { id: 35, q: "التخطيط عمل ذهني موضوعه الترتيبات التي يفكر فيها المرء في حاضره لكي يواجه بها مستقبله.", ans: "true" }
+        ];
+
+        const essayData = [
+            {
+                q: "وضح بإيجاز مهارات المدير (الإدارة)؟",
+                answer: "1- المهارات الإدارية: وتنبع من وظائف المدير (التخطيط، والتنظيم، والتوجيه، والرقابة).<br>2- التعامل مع الأنماط البشرية المختلفة: كالثرثار، والمتردد، والمغرور.<br>3- التفاوض: كيف يكسب الطرفان معاً.<br>4- الاتصال: جهاز الاتصالات هو الجهاز العصبي لأي منظمة.<br>5- اتخاذ القرار: القلب النابض للإدارة، ويشترك فيه القائد والمدير.<br>6- إدارة الوقت."
+            },
+            {
+                q: "ما هي معوقات التخطيط؟",
+                answer: "1- عدم دقة البيانات والمعلومات.<br>2- عدم التنبؤ بالمستقبل.<br>3- مقاومة التغيير.<br>4- ارتفاع تكلفة التخطيط."
+            },
+            {
+                q: "ما هي شروط الهدف الجيد؟",
+                answer: "1- أن يكون الهدف محدداً بدقة.<br>2- أن يكون قابلاً للقياس.<br>3- أن يكون له إطار زمني محدد.<br>4- أن يكون قابلاً للتنفيذ والتحقق."
+            },
+            {
+                q: "تكلم بإيجاز عن مستويات الإدارة؟",
+                answer: "1- <b>الإدارة العليا:</b> قمة الهيكل التنظيمي، وتختص بالتخطيط الاستراتيجي وتضع القواعد والسياسات العامة للمنظمة.<br>2- <b>الإدارة الوسطى:</b> وتختص بالأداء التكتيكي.<br>3- <b>الإدارة التنفيذية (الدنيا):</b> وتختص بالأداء التشغيلي."
+            },
+            {
+                q: "ما هي مرتكزات التخطيط الإستراتيجي؟",
+                answer: "1- الرؤية.<br>2- الأهداف المراد تحقيقها.<br>3- القيم والمعتقدات وثقافة المنظمة.<br>4- الرسالة."
+            }
+        ];
+
+        const allQuestions = [
+            ...tfData.map(item => ({ type: 'tf', ...item })),
+            ...essayData.map((item, idx) => ({ type: 'essay', id: tfData.length + idx + 1, ...item }))
+        ];
+
+        const quizContainer = document.getElementById('quizContainer');
+        const progressIndicator = document.getElementById('progressIndicator');
+        const timerBox = document.getElementById('timerBox');
+        const timerText = document.getElementById('timerText');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const resultBox = document.getElementById('resultBox');
+
+        function startExam() {
+            welcomeScreen.style.display = 'none';
+            timerBox.style.display = 'flex';
+            progressIndicator.style.display = 'block';
+            
+            timeLeft = 20 * 60;
+            isSubmitted = false;
+            currentCardIndex = 0;
+            
+            renderQuiz();
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerBox.classList.remove('warning');
+
+            timerInterval = setInterval(() => {
+                if (isSubmitted) {
+                    clearInterval(timerInterval);
+                    return;
+                }
+
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+
+                timerText.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                if (timeLeft <= 60) {
+                    timerBox.classList.add('warning');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("انتهى الوقت المحدد للاختبار! سيتم تصحيح الإجابات وعرض النتيجة فوراً.");
+                    submitQuiz();
+                } else {
+                    timeLeft--;
+                }
+            }, 1000);
+        }
+
+        function renderQuiz() {
+            quizContainer.innerHTML = '';
+            allQuestions.forEach((item, index) => {
+                let cardDiv = document.createElement('div');
+                cardDiv.className = `question-card ${index === 0 ? 'active' : ''}`;
+                cardDiv.id = `card_${index}`;
+
+                if (item.type === 'tf') {
+                    cardDiv.innerHTML = `
+                        <div class="q-header">
+                            <span class="q-number">${index + 1}</span>
+                            <span>${item.q}</span>
+                        </div>
+                        <div class="tf-options">
+                            <label class="tf-option" onclick="selectOption(this, ${index}, 'true')">
+                                <input type="radio" name="q_${index}" value="true"> صحيح (✓)
+                            </label>
+                            <label class="tf-option" onclick="selectOption(this, ${index}, 'false')">
+                                <input type="radio" name="q_${index}" value="false"> خطأ (✗)
+                            </label>
+                        </div>
+                        <div class="correct-answer-badge" id="badge_${index}" style="margin-top:12px; font-weight:700; display:none;"></div>
+                        <div class="navigation-buttons">
+                            <button type="button" class="btn-nav" onclick="prevCard(${index})" ${index === 0 ? 'disabled' : ''}><i class="fa-solid fa-arrow-right"></i> السابق</button>
+                            ${index < allQuestions.length - 1 ? 
+                                `<button type="button" class="btn-next" onclick="nextCard(${index})">التالي <i class="fa-solid fa-arrow-left"></i></button>` : 
+                                `<button type="button" class="btn-submit-exam" onclick="submitQuiz()">إنهاء وتصحيح الاختبار <i class="fa-solid fa-check-double"></i></button>`
+                            }
+                        </div>
+                    `;
+                } else {
+                    cardDiv.innerHTML = `
+                        <div class="q-header">
+                            <span class="q-number">${index + 1}</span>
+                            <span>${item.q}</span>
+                        </div>
+                        <textarea class="essay-textarea" placeholder="اكتب إجابتك هنا للاختبار الذاتي..."></textarea>
+                        <br>
+                        <button type="button" class="btn-show-model" onclick="toggleModelAnswer(${index})">
+                            <i class="fa-solid fa-eye"></i> عرض نموذج الإجابة الصحيحة
+                        </button>
+                        <div class="essay-answer-box" id="essay_ans_${index}">
+                            <strong>نموذج الإجابة:</strong>
+                            ${item.answer}
+                        </div>
+                        <div class="navigation-buttons">
+                            <button type="button" class="btn-nav" onclick="prevCard(${index})"><i class="fa-solid fa-arrow-right"></i> السابق</button>
+                            ${index < allQuestions.length - 1 ? 
+                                `<button type="button" class="btn-next" onclick="nextCard(${index})">التالي <i class="fa-solid fa-arrow-left"></i></button>` : 
+                                `<button type="button" class="btn-submit-exam" onclick="submitQuiz()">إنهاء وتصحيح الاختبار <i class="fa-solid fa-check-double"></i></button>`
+                            }
+                        </div>
+                    `;
+                }
+                quizContainer.appendChild(cardDiv);
+            });
+            progressIndicator.textContent = `السؤال 1 من ${allQuestions.length}`;
+        }
+
+        function selectOption(element, index, val) {
+            const parent = element.parentElement;
+            parent.querySelectorAll('.tf-option').forEach(opt => opt.classList.remove('selected-true'));
+            element.classList.add('selected-true');
+            const radio = element.querySelector('input');
+            radio.checked = true;
+        }
+
+        function nextCard(currentIndex) {
+            document.getElementById(`card_${currentIndex}`).classList.remove('active');
+            currentCardIndex = currentIndex + 1;
+            document.getElementById(`card_${currentCardIndex}`).classList.add('active');
+            progressIndicator.textContent = `السؤال ${currentCardIndex + 1} من ${allQuestions.length}`;
+            window.scrollTo({ top: 150, behavior: 'smooth' });
+        }
+
+        function prevCard(currentIndex) {
+            document.getElementById(`card_${currentIndex}`).classList.remove('active');
+            currentCardIndex = currentIndex - 1;
+            document.getElementById(`card_${currentCardIndex}`).classList.add('active');
+            progressIndicator.textContent = `السؤال ${currentCardIndex + 1} من ${allQuestions.length}`;
+            window.scrollTo({ top: 150, behavior: 'smooth' });
+        }
+
+        function toggleModelAnswer(index) {
+            const box = document.getElementById(`essay_ans_${index}`);
+            box.style.display = box.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function submitQuiz() {
+            if (isSubmitted) return;
+            isSubmitted = true;
+            clearInterval(timerInterval);
+
+            let score = 0;
+            let tfTotal = tfData.length;
+
+            allQuestions.forEach((item, index) => {
+                const card = document.getElementById(`card_${index}`);
+                if(card) card.style.display = 'none';
+
+                if (item.type === 'tf') {
+                    const selected = document.querySelector(`input[name="q_${index}"]:checked`);
+                    const badge = document.getElementById(`badge_${index}`);
+                    if(badge) badge.style.display = 'block';
+
+                    if (selected) {
+                        if (selected.value === item.ans) {
+                            score++;
+                            if(badge) badge.innerHTML = `<span style="color: var(--success);"><i class="fa-solid fa-check"></i> إجابة صحيحة!</span>`;
+                        } else {
+                            if(badge) badge.innerHTML = `<span style="color: var(--danger);"><i class="fa-solid fa-xmark"></i> إجابة خاطئة. الإجابة الصحيحة هي: (${item.ans === 'true' ? 'صحيح ✓' : 'خطأ ✗'})</span>`;
+                        }
+                    } else {
+                        if(badge) badge.innerHTML = `<span style="color: var(--accent);"><i class="fa-solid fa-triangle-exclamation"></i> لم تقم بالإجابة عليها. الإجابة الصحيحة: (${item.ans === 'true' ? 'صحيح ✓' : 'خطأ ✗'})</span>`;
+                    }
+                }
+            });
+
+            allQuestions.forEach((index_item, index) => {
+                const cardElem = document.getElementById(`card_${index}`);
+                if(cardElem) {
+                    cardElem.style.display = 'block';
+                    const navBtns = cardElem.querySelector('.navigation-buttons');
+                    if (navBtns) navBtns.style.display = 'none';
+                }
+            });
+
+            timerBox.style.display = 'none';
+            progressIndicator.style.display = 'none';
+            
+            const resultText = document.getElementById('resultText');
+            resultBox.style.display = 'block';
+            resultText.innerHTML = `لقد حصلت على <b>${score}</b> من <b>${tfTotal}</b> في أسئلة الصح والخطأ.<br>تم تصحيح الإجابات بالكامل، ويمكنك مراجعتها بالأعلى أو إعادة الاختبار متى شئت.`;
+
+            window.scrollTo({ top: top, behavior: 'smooth' });
+        }
+
+        function restartExam() {
+            resultBox.style.display = 'none';
+            quizContainer.innerHTML = '';
+            welcomeScreen.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
