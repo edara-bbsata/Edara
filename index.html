@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار تدريبي على جزء الميد تيرم - الإدارة ببساطة</title>
+    <title>ذهبية الميد تيرم - الإدارة ببساطة</title>
     <!-- استدعاء خط Cairo العصري -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <!-- FontAwesome للأيقونات -->
@@ -45,7 +45,7 @@
             max-width: 800px;
         }
 
-        /* الهيدر العلوي */
+        /* الهيدر المحسن */
         header {
             background: white;
             padding: 25px 30px;
@@ -90,6 +90,33 @@
             margin-top: 4px;
         }
 
+        /* ساعة التايمر */
+        .timer-clock {
+            background: #fff1f2;
+            border: 2px solid #fda4af;
+            color: #e11d48;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 900;
+            font-size: 20px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(225, 29, 72, 0.08);
+        }
+
+        .timer-clock.warning {
+            background: #fee2e2;
+            border-color: #ef4444;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
         .exam-banner {
             text-align: center;
             margin-bottom: 20px;
@@ -109,7 +136,7 @@
             display: none;
         }
 
-        /* شاشة البداية الترحيبية (لوجو كبير جداً، اسم واضح، التعديلات المطلوبة) */
+        /* شاشة البداية الترحيبية مع لوجو كبير وإمضائك */
         .welcome-screen {
             background: white;
             border-radius: var(--radius);
@@ -120,22 +147,22 @@
         }
 
         .welcome-logo-large {
-            width: 180px;
-            height: 180px;
+            width: 140px;
+            height: 140px;
             object-fit: contain;
-            margin-bottom: 20px;
-            border-radius: 28px;
+            margin-bottom: 25px;
+            border-radius: 24px;
             background: #f8fafc;
-            padding: 12px;
+            padding: 10px;
             border: 2px solid var(--border-color);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
         }
 
         .welcome-signature {
-            font-size: 20px;
+            font-size: 18px;
             color: var(--primary);
-            font-weight: 800;
-            margin-bottom: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
             letter-spacing: 0.5px;
         }
 
@@ -151,7 +178,7 @@
             color: var(--text-muted);
             line-height: 1.8;
             margin-bottom: 30px;
-            max-width: 650px;
+            max-width: 600px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -411,7 +438,7 @@
 <body>
 
     <div class="container">
-        <!-- الهيدر -->
+        <!-- الهيدر المحسن -->
         <header>
             <div class="logo-area">
                 <img src="logo - لوجو.png" alt="لوجو الإدارة ببساطة" class="logo-img">
@@ -420,19 +447,24 @@
                     <p>د. عمـــرو الشوبكي</p>
                 </div>
             </div>
+            <!-- ساعة التايمر -->
+            <div class="timer-clock" id="timerBox">
+                <i class="fa-regular fa-clock"></i>
+                <span id="timerText">20:00</span>
+            </div>
         </header>
 
         <div class="exam-banner">
-            <h2>اختبار تدريبي على جزء الميد تيرم</h2>
+            <h2>ذهبية الميد تيرم</h2>
             <div class="progress-indicator" id="progressIndicator">السؤال 1 من 40</div>
         </div>
 
-        <!-- شاشة البداية المحدثة بالكامل -->
+        <!-- شاشة البداية مع اللوجو الكبير وإمضائك -->
         <div class="welcome-screen" id="welcomeScreen">
             <img src="logo - لوجو.png" alt="لوجو الإدارة ببساطة" class="welcome-logo-large">
-            <div class="welcome-signature">د. عمـــرو الشوبكي</div>
-            <h3>مرحباً بك في عالم الإدارة ببساطة</h3>
-            <p>هذا الاختبار مصمم خصيصاً للتدريب على جزء الميد تيرم.<br>يمكنك إعادة الاختبار عدة مرات متى شئت لضمان تحقيق الاستفادة القصوى.</p>
+            <div class="welcome-signature">إشراف وتقديم: د. عمـــرو الشوبكي</div>
+            <h3>مرحباً بك في اختبار ذهبية الميد تيرم</h3>
+            <p>هذا الاختبار مصمم خصيصاً لتقييم مستواك المعرفي والإداري. مدة الاختبار المقررة هي <b>20 دقيقة</b> تبدأ فور ضغطك على زر البدء.<br>يمكنك إعادة الاختبار عدة مرات متى شئت لضمان تحقيق الاستفادة القصوى.</p>
             <button type="button" class="btn-start" onclick="startExam()">
                 <i class="fa-solid fa-play"></i> ابدأ الامتحان الآن
             </button>
@@ -452,6 +484,8 @@
     </div>
 
     <script>
+        let timeLeft = 20 * 60;
+        let timerInterval;
         let isSubmitted = false;
         let currentCardIndex = 0;
 
@@ -523,17 +557,51 @@
 
         const quizContainer = document.getElementById('quizContainer');
         const progressIndicator = document.getElementById('progressIndicator');
+        const timerBox = document.getElementById('timerBox');
+        const timerText = document.getElementById('timerText');
         const welcomeScreen = document.getElementById('welcomeScreen');
         const resultBox = document.getElementById('resultBox');
 
         function startExam() {
             welcomeScreen.style.display = 'none';
+            timerBox.style.display = 'flex';
             progressIndicator.style.display = 'block';
             
+            timeLeft = 20 * 60;
             isSubmitted = false;
             currentCardIndex = 0;
             
             renderQuiz();
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerBox.classList.remove('warning');
+
+            timerInterval = setInterval(() => {
+                if (isSubmitted) {
+                    clearInterval(timerInterval);
+                    return;
+                }
+
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+
+                timerText.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                if (timeLeft <= 60) {
+                    timerBox.classList.add('warning');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("انتهى الوقت المحدد للاختبار! سيتم تصحيح الإجابات وعرض النتيجة فوراً.");
+                    submitQuiz();
+                } else {
+                    timeLeft--;
+                }
+            }, 1000);
         }
 
         function renderQuiz() {
@@ -627,6 +695,7 @@
         function submitQuiz() {
             if (isSubmitted) return;
             isSubmitted = true;
+            clearInterval(timerInterval);
 
             let score = 0;
             let tfTotal = tfData.length;
@@ -662,13 +731,14 @@
                 }
             });
 
+            timerBox.style.display = 'none';
             progressIndicator.style.display = 'none';
             
             const resultText = document.getElementById('resultText');
             resultBox.style.display = 'block';
             resultText.innerHTML = `لقد حصلت على <b>${score}</b> من <b>${tfTotal}</b> في أسئلة الصح والخطأ.<br>تم تصحيح الإجابات بالكامل، ويمكنك مراجعتها بالأعلى أو إعادة الاختبار متى شئت.`;
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({ top: top, behavior: 'smooth' });
         }
 
         function restartExam() {
