@@ -102,7 +102,6 @@
             color: var(--text-muted);
             font-weight: 700;
             margin-top: 8px;
-            display: none;
         }
 
         /* شاشة البداية الترحيبية */
@@ -404,7 +403,7 @@
 <body>
 
     <div class="container">
-        <!-- الهيدر العلوي المصغر يظهر في صفحات الأسئلة ويحتوي اللوجو واسم حضرتك -->
+        <!-- الهيدر العلوي لصفحات الأسئلة (يظهر أثناء الامتحان فقط) -->
         <div class="exam-header" id="examHeader" style="display: none;">
             <div class="logo-area">
                 <img src="logo - لوجو.png" alt="لوجو الإدارة ببساطة" class="logo-img-small">
@@ -416,9 +415,9 @@
             <div style="font-weight: 700; color: var(--text-muted); font-size: 14px;">اختبار تدريبي ( ميد تيرم )</div>
         </div>
 
-        <div class="exam-banner">
+        <div class="exam-banner" id="examBannerArea">
             <h2 id="mainTitle">اختبار تدريبي ( ميد تيرم )</h2>
-            <div class="progress-indicator" id="progressIndicator">السؤال 1 من 40</div>
+            <div class="progress-indicator" id="progressIndicator" style="display: none;">السؤال 1 من 40</div>
         </div>
 
         <!-- شاشة البداية الترحيبية -->
@@ -427,7 +426,7 @@
             <div class="welcome-signature">د. عمـــرو الشوبكي</div>
             <h3>مرحباً بك في عالم الإدارة ببساطة</h3>
             <p>هذا الاختبار مصمم خصيصاً للتدريب على جزء ( ميد تيرم ).<br>يمكنك إعادة الاختبار عدة مرات متى شئت لضمان تحقيق الاستفادة القصوى.</p>
-            <button type="button" class="btn-start" onclick="startExam()">
+            <button type="button" class="btn-start" id="startBtn">
                 <i class="fa-solid fa-play"></i> ابدأ الامتحان الآن
             </button>
         </div>
@@ -436,7 +435,7 @@
         <div class="result-box" id="resultBox">
             <h2><i class="fa-solid fa-award"></i> مبروك إتمام الاختبار!</h2>
             <p id="resultText"></p>
-            <button type="button" class="btn-restart" onclick="restartExam()">
+            <button type="button" class="btn-restart" id="restartBtn">
                 <i class="fa-solid fa-rotate-right"></i> إعادة الاختبار من جديد
             </button>
         </div>
@@ -521,18 +520,30 @@
         const resultBox = document.getElementById('resultBox');
         const examHeader = document.getElementById('examHeader');
         const mainTitle = document.getElementById('mainTitle');
+        const startBtn = document.getElementById('startBtn');
+        const restartBtn = document.getElementById('restartBtn');
 
-        function startExam() {
+        startBtn.addEventListener('click', function() {
             welcomeScreen.style.display = 'none';
-            examHeader.style.display = 'flex'; // إظهار الهيدر الذي يحتوي اللوجو والاسم في صفحات الأسئلة
+            examHeader.style.display = 'flex';
             progressIndicator.style.display = 'block';
-            mainTitle.style.display = 'none'; // إخفاء العنوان الكبير المتكرر أثناء حل الأسئلة
+            mainTitle.style.display = 'none';
             
             isSubmitted = false;
             currentCardIndex = 0;
             
             renderQuiz();
-        }
+        });
+
+        restartBtn.addEventListener('click', function() {
+            resultBox.style.display = 'none';
+            quizContainer.innerHTML = '';
+            examHeader.style.display = 'none';
+            progressIndicator.style.display = 'none';
+            mainTitle.style.display = 'block';
+            welcomeScreen.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
 
         function renderQuiz() {
             quizContainer.innerHTML = '';
@@ -591,6 +602,7 @@
                 quizContainer.appendChild(cardDiv);
             });
             progressIndicator.textContent = `السؤال 1 من ${allQuestions.length}`;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function selectOption(element, index, val) {
@@ -606,7 +618,7 @@
             currentCardIndex = currentIndex + 1;
             document.getElementById(`card_${currentCardIndex}`).classList.add('active');
             progressIndicator.textContent = `السؤال ${currentCardIndex + 1} من ${allQuestions.length}`;
-            window.scrollTo({ top: 150, behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function prevCard(currentIndex) {
@@ -614,7 +626,7 @@
             currentCardIndex = currentIndex - 1;
             document.getElementById(`card_${currentCardIndex}`).classList.add('active');
             progressIndicator.textContent = `السؤال ${currentCardIndex + 1} من ${allQuestions.length}`;
-            window.scrollTo({ top: 150, behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function toggleModelAnswer(index) {
@@ -666,15 +678,6 @@
             resultBox.style.display = 'block';
             resultText.innerHTML = `لقد حصلت على <b>${score}</b> من <b>${tfTotal}</b> في أسئلة الصح والخطأ.<br>تم تصحيح الإجابات بالكامل، ويمكنك مراجعتها بالأعلى أو إعادة الاختبار متى شئت.`;
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function restartExam() {
-            resultBox.style.display = 'none';
-            quizContainer.innerHTML = '';
-            examHeader.style.display = 'none';
-            mainTitle.style.display = 'block';
-            welcomeScreen.style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
