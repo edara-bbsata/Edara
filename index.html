@@ -403,7 +403,7 @@
 <body>
 
     <div class="container">
-        <!-- الهيدر العلوي لصفحات الأسئلة (يظهر أثناء الامتحان فقط) -->
+        <!-- الهيدر العلوي لصفحات الأسئلة -->
         <div class="exam-header" id="examHeader" style="display: none;">
             <div class="logo-area">
                 <img src="logo - لوجو.png" alt="لوجو الإدارة ببساطة" class="logo-img-small">
@@ -426,7 +426,7 @@
             <div class="welcome-signature">د. عمـــرو الشوبكي</div>
             <h3>مرحباً بك في عالم الإدارة ببساطة</h3>
             <p>هذا الاختبار مصمم خصيصاً للتدريب على جزء ( ميد تيرم ).<br>يمكنك إعادة الاختبار عدة مرات متى شئت لضمان تحقيق الاستفادة القصوى.</p>
-            <button type="button" class="btn-start" id="startBtn">
+            <button type="button" class="btn-start" onclick="startExam()">
                 <i class="fa-solid fa-play"></i> ابدأ الامتحان الآن
             </button>
         </div>
@@ -435,7 +435,7 @@
         <div class="result-box" id="resultBox">
             <h2><i class="fa-solid fa-award"></i> مبروك إتمام الاختبار!</h2>
             <p id="resultText"></p>
-            <button type="button" class="btn-restart" id="restartBtn">
+            <button type="button" class="btn-restart" onclick="restartExam()">
                 <i class="fa-solid fa-rotate-right"></i> إعادة الاختبار من جديد
             </button>
         </div>
@@ -514,38 +514,27 @@
             ...essayData.map((item, idx) => ({ type: 'essay', id: tfData.length + idx + 1, ...item }))
         ];
 
-        const quizContainer = document.getElementById('quizContainer');
-        const progressIndicator = document.getElementById('progressIndicator');
-        const welcomeScreen = document.getElementById('welcomeScreen');
-        const resultBox = document.getElementById('resultBox');
-        const examHeader = document.getElementById('examHeader');
-        const mainTitle = document.getElementById('mainTitle');
-        const startBtn = document.getElementById('startBtn');
-        const restartBtn = document.getElementById('restartBtn');
+        function startExam() {
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            const examHeader = document.getElementById('examHeader');
+            const progressIndicator = document.getElementById('progressIndicator');
+            const mainTitle = document.getElementById('mainTitle');
 
-        startBtn.addEventListener('click', function() {
-            welcomeScreen.style.display = 'none';
-            examHeader.style.display = 'flex';
-            progressIndicator.style.display = 'block';
-            mainTitle.style.display = 'none';
+            if (welcomeScreen) welcomeScreen.style.display = 'none';
+            if (examHeader) examHeader.style.display = 'flex';
+            if (progressIndicator) progressIndicator.style.display = 'block';
+            if (mainTitle) mainTitle.style.display = 'none';
             
             isSubmitted = false;
             currentCardIndex = 0;
             
             renderQuiz();
-        });
-
-        restartBtn.addEventListener('click', function() {
-            resultBox.style.display = 'none';
-            quizContainer.innerHTML = '';
-            examHeader.style.display = 'none';
-            progressIndicator.style.display = 'none';
-            mainTitle.style.display = 'block';
-            welcomeScreen.style.display = 'block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        }
 
         function renderQuiz() {
+            const quizContainer = document.getElementById('quizContainer');
+            const progressIndicator = document.getElementById('progressIndicator');
+            
             quizContainer.innerHTML = '';
             allQuestions.forEach((item, index) => {
                 let cardDiv = document.createElement('div');
@@ -601,7 +590,7 @@
                 }
                 quizContainer.appendChild(cardDiv);
             });
-            progressIndicator.textContent = `السؤال 1 من ${allQuestions.length}`;
+            if (progressIndicator) progressIndicator.textContent = `السؤال 1 من ${allQuestions.length}`;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -617,7 +606,8 @@
             document.getElementById(`card_${currentIndex}`).classList.remove('active');
             currentCardIndex = currentIndex + 1;
             document.getElementById(`card_${currentCardIndex}`).classList.add('active');
-            progressIndicator.textContent = `السؤال ${currentCardIndex + 1} من ${allQuestions.length}`;
+            const progressIndicator = document.getElementById('progressIndicator');
+            if (progressIndicator) progressIndicator.textContent = `السؤال ${currentCardIndex + 1} من ${allQuestions.length}`;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -625,7 +615,8 @@
             document.getElementById(`card_${currentIndex}`).classList.remove('active');
             currentCardIndex = currentIndex - 1;
             document.getElementById(`card_${currentCardIndex}`).classList.add('active');
-            progressIndicator.textContent = `السؤال ${currentCardIndex + 1} من ${allQuestions.length}`;
+            const progressIndicator = document.getElementById('progressIndicator');
+            if (progressIndicator) progressIndicator.textContent = `السؤال ${currentCardIndex + 1} من ${allQuestions.length}`;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -672,12 +663,31 @@
                 }
             });
 
-            progressIndicator.style.display = 'none';
+            const progressIndicator = document.getElementById('progressIndicator');
+            if (progressIndicator) progressIndicator.style.display = 'none';
             
             const resultText = document.getElementById('resultText');
+            const resultBox = document.getElementById('resultBox');
             resultBox.style.display = 'block';
             resultText.innerHTML = `لقد حصلت على <b>${score}</b> من <b>${tfTotal}</b> في أسئلة الصح والخطأ.<br>تم تصحيح الإجابات بالكامل، ويمكنك مراجعتها بالأعلى أو إعادة الاختبار متى شئت.`;
 
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function restartExam() {
+            const resultBox = document.getElementById('resultBox');
+            const quizContainer = document.getElementById('quizContainer');
+            const examHeader = document.getElementById('examHeader');
+            const progressIndicator = document.getElementById('progressIndicator');
+            const mainTitle = document.getElementById('mainTitle');
+            const welcomeScreen = document.getElementById('welcomeScreen');
+
+            resultBox.style.display = 'none';
+            quizContainer.innerHTML = '';
+            examHeader.style.display = 'none';
+            progressIndicator.style.display = 'none';
+            mainTitle.style.display = 'block';
+            welcomeScreen.style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
