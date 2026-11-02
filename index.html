@@ -45,7 +45,7 @@
             max-width: 800px;
         }
 
-        /* الهيدر الثابت الذي يظهر في صفحات الأسئلة */
+        /* الهيدر العلوي لصفحات الأسئلة */
         .exam-header {
             background: white;
             padding: 20px 25px;
@@ -56,7 +56,6 @@
             justify-content: space-between;
             margin-bottom: 20px;
             border: 1px solid var(--border-color);
-            display: none; /* مخفي في شاشة الترحيب ويظهر أثناء الامتحان */
         }
 
         .logo-area {
@@ -406,7 +405,7 @@
 
     <div class="container">
         <!-- الهيدر العلوي المصغر يظهر في صفحات الأسئلة ويحتوي اللوجو واسم حضرتك -->
-        <div class="exam-header" id="examHeader">
+        <div class="exam-header" id="examHeader" style="display: none;">
             <div class="logo-area">
                 <img src="logo - لوجو.png" alt="لوجو الإدارة ببساطة" class="logo-img-small">
                 <div class="logo-title">
@@ -525,9 +524,9 @@
 
         function startExam() {
             welcomeScreen.style.display = 'none';
-            examHeader.style.display = 'flex'; // إظهار اللوجو والاسم في صفحات الأسئلة
+            examHeader.style.display = 'flex'; // إظهار الهيدر الذي يحتوي اللوجو والاسم في صفحات الأسئلة
             progressIndicator.style.display = 'block';
-            mainTitle.style.display = 'none'; // إخفاء العنوان المكرر أثناء الاختبار
+            mainTitle.style.display = 'none'; // إخفاء العنوان الكبير المتكرر أثناء حل الأسئلة
             
             isSubmitted = false;
             currentCardIndex = 0;
@@ -676,7 +675,7 @@
             examHeader.style.display = 'none';
             mainTitle.style.display = 'block';
             welcomeScreen.style.display = 'block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: 'smooth' );
         }
     </script>
 </body>
