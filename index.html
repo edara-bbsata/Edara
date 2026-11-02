@@ -45,7 +45,7 @@
             max-width: 800px;
         }
 
-        /* الهيدر المحسن */
+        /* الهيدر العلوي */
         header {
             background: white;
             padding: 25px 30px;
@@ -109,7 +109,7 @@
             display: none;
         }
 
-        /* شاشة البداية الترحيبية مع اللوجو الكبير وإمضائك مباشرة */
+        /* شاشة البداية الترحيبية مع لوجو كبير جداً واسم واضح */
         .welcome-screen {
             background: white;
             border-radius: var(--radius);
@@ -120,22 +120,22 @@
         }
 
         .welcome-logo-large {
-            width: 140px;
-            height: 140px;
+            width: 180px;
+            height: 180px;
             object-fit: contain;
-            margin-bottom: 25px;
-            border-radius: 24px;
+            margin-bottom: 20px;
+            border-radius: 28px;
             background: #f8fafc;
-            padding: 10px;
+            padding: 12px;
             border: 2px solid var(--border-color);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.06);
         }
 
         .welcome-signature {
-            font-size: 18px;
+            font-size: 20px;
             color: var(--primary);
-            font-weight: 700;
-            margin-bottom: 10px;
+            font-weight: 800;
+            margin-bottom: 20px;
             letter-spacing: 0.5px;
         }
 
@@ -151,7 +151,7 @@
             color: var(--text-muted);
             line-height: 1.8;
             margin-bottom: 30px;
-            max-width: 600px;
+            max-width: 650px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -427,12 +427,12 @@
             <div class="progress-indicator" id="progressIndicator">السؤال 1 من 40</div>
         </div>
 
-        <!-- شاشة البداية بدون جملة إشراف وتقديم -->
+        <!-- شاشة البداية بالطلبات الجديدة -->
         <div class="welcome-screen" id="welcomeScreen">
             <img src="logo - لوجو.png" alt="لوجو الإدارة ببساطة" class="welcome-logo-large">
             <div class="welcome-signature">د. عمـــرو الشوبكي</div>
-            <h3>مرحباً بك في اختبار ذهبية الميد تيرم</h3>
-            <p>هذا الاختبار مصمم خصيصاً لتقييم مستواك المعرفي والإداري بدون قيود زمنية لتاخذ كامل حريتك في التفكير والتأمل.<br>يمكنك إعادة الاختبار عدة مرات متى شئت لضمان تحقيق الاستفادة القصوى.</p>
+            <h3>مرحباً بك في اختبار التجريبي على جزء الميد تيرم</h3>
+            <p>هذا الاختبار مصمم خصيصاً للتدريب على اختبار الميد تيرم.<br>يمكنك إعادة الاختبار عدة مرات متى شئت لضمان تحقيق الاستفادة القصوى.</p>
             <button type="button" class="btn-start" onclick="startExam()">
                 <i class="fa-solid fa-play"></i> ابدأ الامتحان الآن
             </button>
