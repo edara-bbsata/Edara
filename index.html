@@ -45,13 +45,55 @@
             max-width: 800px;
         }
 
+        /* الهيدر الثابت الذي يظهر في صفحات الأسئلة */
+        .exam-header {
+            background: white;
+            padding: 20px 25px;
+            border-radius: var(--radius);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            display: none; /* مخفي في شاشة الترحيب ويظهر أثناء الامتحان */
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-img-small {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border-radius: 12px;
+            background: #f8fafc;
+            padding: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        .logo-title h1 {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--text-main);
+        }
+
+        .logo-title p {
+            font-size: 14px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
         .exam-banner {
             text-align: center;
             margin-bottom: 25px;
         }
 
         .exam-banner h2 {
-            font-size: 30px;
+            font-size: 28px;
             font-weight: 900;
             color: var(--text-main);
         }
@@ -64,7 +106,7 @@
             display: none;
         }
 
-        /* شاشة البداية الترحيبية (اللوجو والاسم مرة واحدة فقط) */
+        /* شاشة البداية الترحيبية */
         .welcome-screen {
             background: white;
             border-radius: var(--radius);
@@ -352,18 +394,35 @@
             .tf-options {
                 flex-direction: column;
             }
+            .exam-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <!-- الهيدر العلوي المصغر يظهر في صفحات الأسئلة ويحتوي اللوجو واسم حضرتك -->
+        <div class="exam-header" id="examHeader">
+            <div class="logo-area">
+                <img src="logo - لوجو.png" alt="لوجو الإدارة ببساطة" class="logo-img-small">
+                <div class="logo-title">
+                    <h1>الإدارة ببساطة</h1>
+                    <p>د. عمـــرو الشوبكي</p>
+                </div>
+            </div>
+            <div style="font-weight: 700; color: var(--text-muted); font-size: 14px;">اختبار تدريبي ( ميد تيرم )</div>
+        </div>
+
         <div class="exam-banner">
-            <h2>اختبار تدريبي ( ميد تيرم )</h2>
+            <h2 id="mainTitle">اختبار تدريبي ( ميد تيرم )</h2>
             <div class="progress-indicator" id="progressIndicator">السؤال 1 من 40</div>
         </div>
 
-        <!-- شاشة البداية تحتوي على اللوجو والاسم مرة واحدة فقط -->
+        <!-- شاشة البداية الترحيبية -->
         <div class="welcome-screen" id="welcomeScreen">
             <img src="logo - لوجو.png" alt="لوجو الإدارة ببساطة" class="welcome-logo-large">
             <div class="welcome-signature">د. عمـــرو الشوبكي</div>
@@ -461,10 +520,14 @@
         const progressIndicator = document.getElementById('progressIndicator');
         const welcomeScreen = document.getElementById('welcomeScreen');
         const resultBox = document.getElementById('resultBox');
+        const examHeader = document.getElementById('examHeader');
+        const mainTitle = document.getElementById('mainTitle');
 
         function startExam() {
             welcomeScreen.style.display = 'none';
+            examHeader.style.display = 'flex'; // إظهار اللوجو والاسم في صفحات الأسئلة
             progressIndicator.style.display = 'block';
+            mainTitle.style.display = 'none'; // إخفاء العنوان المكرر أثناء الاختبار
             
             isSubmitted = false;
             currentCardIndex = 0;
@@ -610,6 +673,8 @@
         function restartExam() {
             resultBox.style.display = 'none';
             quizContainer.innerHTML = '';
+            examHeader.style.display = 'none';
+            mainTitle.style.display = 'block';
             welcomeScreen.style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
